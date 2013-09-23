@@ -5,8 +5,6 @@ from gist import GistAPI
 user = config.user
 password = config.password
 
-TOKEN = "8a1100e6bd24b225d160a941fcc612eb53f0e8c3"
-
 
 api = GistAPI(user, password)
 
