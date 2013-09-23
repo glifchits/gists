@@ -1,0 +1,41 @@
+import re
+import config
+from gist import GistAPI
+
+user = config.user
+password = config.password
+
+TOKEN = "8a1100e6bd24b225d160a941fcc612eb53f0e8c3"
+
+
+api = GistAPI(user, password)
+
+gists = api.get_gists()
+
+print "Gists:"
+for num, info in enumerate(gists):
+    id, name = info
+    print "%3s: %s" % (num, name)
+
+def get_gist(loc):
+    if loc.isdigit():
+        id = gists[int(loc)][0]
+        return api.get_gist(id)
+    else:
+        reg = re.compile("^%s$" % loc, re.IGNORECASE)
+        for id, name in gists:
+            if reg.match(name):
+                return api.get_gist(id)
+    raise ValueError("No Gist could be found with the locator '%s'" % loc)
+
+mygist = get_gist('0')
+
+def gistfile_header(gistfile):
+    s = "%s:" % gistfile.name
+    return s
+
+print ''
+for gistfile in mygist.files:
+    print gistfile_header(gistfile)
+    print gistfile.content
+    print ''
