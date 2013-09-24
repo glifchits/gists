@@ -26,6 +26,7 @@ def get_gist(loc):
                 return api.get_gist(id)
     raise ValueError("No Gist could be found with the locator '%s'" % loc)
 
+print "get gist 0"
 mygist = get_gist('0')
 
 def gistfile_header(gistfile):

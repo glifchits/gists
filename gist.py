@@ -13,9 +13,11 @@ class GeneralGist:
     def __init__(self, json):
         self._json = json
 
-    @property
-    def id(self):
-        return self._json.get('id')
+    def __getattr__(self, name):
+        try:
+            return self._json[name]
+        except KeyError:
+            raise AttributeError
 
     @property
     def name(self):
@@ -78,9 +80,9 @@ class GistFile:
     def __str__(self):
         return self.__unicode__()
 
-    def __getattr__(self, key):
+    def __getattr__(self, name):
         try:
-            return self._json[key]
+            return self._json[name]
         except KeyError:
             raise AttributeError
 
