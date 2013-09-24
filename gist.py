@@ -2,12 +2,13 @@ import json
 import re
 import requests
 
+
 class GeneralGist:
 
-    """
+    '''
     A general class for GitHub Gists. Is compatible with either the single
     Gist or the multiple Gists JSON API return value.
-    """
+    '''
 
     def __init__(self, json):
         self._json = json
@@ -20,9 +21,9 @@ class GeneralGist:
     def name(self):
         files = self._json.get('files')
         name = files.keys()[0]
-        reg = re.compile("(gistfile)(\d+)(.txt)")
+        reg = re.compile('(gistfile)(\d+)(.txt)')
         if reg.match(name):
-            name = "gist:%s" % (self.id)
+            name = 'gist:%s' % (self.id)
         return name
 
     @property
@@ -37,35 +38,36 @@ class GeneralGist:
 
 class Gist(GeneralGist):
 
-    """
+    '''
     A class which implements features that are available in the single
     Gist API return value.
-    """
+    '''
 
     def __init__(self, json):
         GeneralGist.__init__(self, json)
 
     @property
     def filenames(self):
-        return self._json.get("files").keys()
+        return self._json.get('files').keys()
 
     @property
     def files(self):
         return [self.gist_file(filename) for filename in self.filenames]
 
     def gist_file(self, filename):
-        reg = re.compile("^%s$" % filename, re.IGNORECASE)
+        reg = re.compile('^%s$' % filename, re.IGNORECASE)
         for fname in self.filenames:
             match = reg.match(fname)
             if match:
                 return GistFile(self._json['files'].get(match.group()))
-        raise ValueError("there is no file named '%s'" % filename)
+        raise ValueError('there is no file named "%s"' % filename)
+
 
 class GistFile:
 
-    """
+    '''
     A file within a Gist
-    """
+    '''
 
     def __init__(self, json):
         self._json = json
@@ -84,12 +86,12 @@ class GistFile:
 
     @property
     def name(self):
-        return self._json.get("filename")
+        return self._json.get('filename')
 
 class GistAPI:
 
     def __init__(self, user=None, password=None):
-        self.base = "https://api.github.com"
+        self.base = 'https://api.github.com'
         if user and password:
             self.user = user
             self.auth = (user, password)
