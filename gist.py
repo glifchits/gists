@@ -76,28 +76,15 @@ class GistFile:
     def __str__(self):
         return self.__unicode__()
 
-    @property
-    def raw_url(self):
-        return self._json.get("raw_url")
-
-    @property
-    def language(self):
-        lang = self._json.get("language")
-        if lang == 'null':
-            return None
-        return lang
+    def __getattr__(self, key):
+        try:
+            return self._json[key]
+        except KeyError:
+            raise AttributeError
 
     @property
     def name(self):
         return self._json.get("filename")
-
-    @property
-    def content(self):
-        return self._json.get("content")
-
-    @property
-    def type(self):
-        return self._json.get("type")
 
 class GistAPI:
 
